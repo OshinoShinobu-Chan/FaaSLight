@@ -10,7 +10,9 @@ import time
 
 time_start = time.time()
 
-input_package  = "XXXApp_name"
+input_package  = sys.argv[1]
+if input_package[-1] == '/':
+    input_package = input_package[:-1]
 
 dir_name = input_package.split('/')[-1]
 output_file = "{}/output.json".format(input_package)
