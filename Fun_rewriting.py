@@ -226,8 +226,11 @@ def rewrite_node(node: astroid.FunctionDef, unused_file_name):
     returnnum_save.clear()
     assignname_save.clear()
     functiondef_save.clear()
+    globals_ = []
 
     for i in node.body:
+        if i.__class__ == astroid.Global:
+            globals_.extend(i.names)
         node_tmp = parse(i.as_string())
     
     """find useful variables"""
@@ -246,6 +249,7 @@ def rewrite_node(node: astroid.FunctionDef, unused_file_name):
     varible_globals = []
     varible_globals.extend(new_add)
     new_add.extend(argskey_temp)
+    new_add.extend(globals_)
 
     """number of returns"""
     return_num = 0
@@ -325,7 +329,7 @@ def rewrite_node(node: astroid.FunctionDef, unused_file_name):
         for i in new_add:
             inputvar = inputvar + "\'{}\': {},".format(i, i)
         inputvar = inputvar[:-1] +'}'
-   
+
     if return_num > 0:
         newcontent= '''
         return custom_funtemplate.rewrite_template('{}', {}, {}, {})
