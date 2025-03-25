@@ -8,6 +8,7 @@
 spilot_path="/root/ServerlessPilot/"
 hostip=$(hostname -I | awk '{print $1}')
 
+rm -rf $3
 cp -r $1 $3
 
 python3 integrationFunMain.py $3
