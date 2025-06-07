@@ -13,16 +13,24 @@ cp -r $1 $3
 
 python3 integrationFunMain.py $3
 cd $3
+docker image rm $2:modified
+docker image rm $hostip:5000/$2:modified
 docker build . -t $2:modified
 docker tag $2:modified $hostip:5000/$2:modified
 docker push $hostip:5000/$2:modified
 
+ssh node1 "docker image rm $2:modified"
+ssh node1 "docker image rm $hostip:5000/$2:modified"
 ssh node1 "docker pull $hostip:5000/$2:modified"
 ssh node1 "docker tag $hostip:5000/$2:modified $2:modified"
 
+ssh node2 "docker image rm $2:modified"
+ssh node2 "docker image rm $hostip:5000/$2:modified"
 ssh node2 "docker pull $hostip:5000/$2:modified"
 ssh node2 "docker tag $hostip:5000/$2:modified $2:modified"
 
+ssh node3 "docker image rm $2:modified"
+ssh node3 "docker image rm $hostip:5000/$2:modified"
 ssh node3 "docker pull $hostip:5000/$2:modified"
 ssh node3 "docker tag $hostip:5000/$2:modified $2:modified"
 

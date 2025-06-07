@@ -7,16 +7,24 @@ spilot_path="/root/ServerlessPilot"
 hostip=$(hostname -I | awk '{print $1}')
 
 cd $1
+docker image rm $2:origin
+docker image rm $hostip:5000/$2:origin
 docker build . -t $2:origin 
 docker tag $2:origin $hostip:5000/$2:origin
 docker push $hostip:5000/$2:origin
 
+ssh node1 "docker image rm $2:origin"
+ssh node1 "docker image rm $hostip:5000/$2:origin"
 ssh node1 "docker pull $hostip:5000/$2:origin"
 ssh node1 "docker tag $hostip:5000/$2:origin $2:origin"
 
+ssh node2 "docker image rm $2:origin"
+ssh node2 "docker image rm $hostip:5000/$2:origin"
 ssh node2 "docker pull $hostip:5000/$2:origin"
 ssh node2 "docker tag $hostip:5000/$2:origin $2:origin"
 
+ssh node2 "docker image rm $2:origin"
+ssh node2 "docker image rm $hostip:5000/$2:origin"
 ssh node3 "docker pull $hostip:5000/$2:origin"
 ssh node3 "docker tag $hostip:5000/$2:origin $2:origin"
 
